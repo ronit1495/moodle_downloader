@@ -129,7 +129,11 @@ def download_course_files(session, course_id):
         logging.info(f"\nProcessing: {course_name} (ID: {course_id})")
         
         course_folder = os.path.join(DOWNLOAD_FOLDER, clean_filename(course_name))
-        create_folder(course_folder)
+        if os.path.exists(course_folder):
+            logging.info(f"Folder already downloaded: {course_folder}, so proceeding to next course ")
+            return
+
+        os.makedirs(course_folder)
         
         course_page = safe_request(session, "GET", course_url)
         if not course_page:
